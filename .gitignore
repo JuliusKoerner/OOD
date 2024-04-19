@@ -1,0 +1,4 @@
+MNIST*
+models*
+__pycache__/
+logs*
