@@ -1,4 +1,9 @@
+# directories
 MNIST*
+CIFAR10*
 models*
 __pycache__/
 logs*
+
+#files
+*.pth
