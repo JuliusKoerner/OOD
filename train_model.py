@@ -38,9 +38,10 @@ def run(config):
     optimizer = optim.Adam(model.parameters(), lr=config["learning_rate"])
 
     # Training loop
-    model.train()
+
     min_val_loss = 0
     for epoch in tqdm(range(config["epochs"])):
+        model.train()
         for batch_idx, (data, target) in enumerate(train_loader):
             optimizer.zero_grad()
             output = model(data.to("cuda"))
@@ -52,16 +53,17 @@ def run(config):
             )
 
         val_loss = 0
+        model.eval()
         with torch.no_grad():
             for data, target in val_loader:
                 output = model(data.to("cuda"))
                 val_loss += loss_func(output, target.to("cuda")).item()
-            val_loss /= len(val_loader)
+            val_loss /= len(val_dataset)
             writer.add_scalar("Loss/val", val_loss, epoch)
         if val_loss < min_val_loss or min_val_loss == 0:
             min_val_loss = val_loss
             torch.save(model.state_dict(), config["store"])
-            print("Model saved")
+            print("Model saved with min val loss: ", min_val_loss)
     writer.add_hparams(config, {"min_val_loss": min_val_loss})
 
 

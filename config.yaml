@@ -1,5 +1,5 @@
 epochs: 20
 batch_size: 64
 learning_rate: 0.00001
-logs: logs_grid
+logs: logs
 store: tmp_models/model1_drop.pth
