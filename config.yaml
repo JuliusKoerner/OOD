@@ -1,5 +1,7 @@
-epochs: 20
+epochs: 40
 batch_size: 64
-learning_rate: 0.00001
+learning_rate: 0.0001
 logs: logs
-store: tmp_models/model1_drop.pth
+store: tmp_models/model3_drop_fc_0_5.pth
+model: "Conv_Net_FC_Dropout"
+dropout: 0.5

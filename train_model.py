@@ -5,11 +5,11 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from Datasets import load
 import yaml
-from model import Conv_Net, Conv_Net_Dropout
-import sys
+from model import load_model
 import os
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
+import sys
 
 
 def load_config(path):
@@ -32,13 +32,12 @@ def run(config):
     val_dataset = load("MNIST")(train=False)
     val_loader = DataLoader(val_dataset, batch_size=config["batch_size"], shuffle=False)
     # Model, Loss, and Optimizer
-    model = Conv_Net_Dropout()
+    model = load_model(config["model"])(config["dropout"])
     model = model.to("cuda")
     loss_func = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=config["learning_rate"])
 
     # Training loop
-
     min_val_loss = 0
     for epoch in tqdm(range(config["epochs"])):
         model.train()
@@ -64,7 +63,7 @@ def run(config):
             min_val_loss = val_loss
             torch.save(model.state_dict(), config["store"])
             print("Model saved with min val loss: ", min_val_loss)
-    writer.add_hparams(config, {"min_val_loss": min_val_loss})
+    writer.add_hparams(config, {"hparam/val_loss": min_val_loss})
 
 
 if __name__ == "__main__":

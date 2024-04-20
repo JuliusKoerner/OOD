@@ -33,7 +33,7 @@ class Conv_Net(nn.Module):
 
 
 class Conv_Net_Dropout(nn.Module):
-    def __init__(self, prob=0.25):
+    def __init__(self, prob=0.5):
         super(Conv_Net_Dropout, self).__init__()
         # Convolutional layers
         self.prob = prob
@@ -58,9 +58,44 @@ class Conv_Net_Dropout(nn.Module):
             nn.Softmax(dim=1),
         )
 
+    def set_dropout(self, prob):
+        self.prob = prob
+        for layer in self.convs:
+            if isinstance(layer, nn.Dropout):
+                layer.p = self.prob
+        for layer in self.fcs:
+            if isinstance(layer, nn.Dropout):
+                layer.p = self.prob
+
     def forward(self, x):
         x = self.convs(x)
         x = x.view(-1, 64 * 7 * 7)
         x = self.fcs(x)
 
         return x
+
+
+class Conv_Net_FC_Dropout(Conv_Net_Dropout):
+    def __init__(self, prob=0.5):
+        super(Conv_Net_FC_Dropout, self).__init__()
+        # Convolutional layers
+        self.prob = prob
+        self.convs = nn.Sequential(
+            nn.Conv2d(1, 16, kernel_size=5, stride=1, padding=2),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(32, 64, kernel_size=5, stride=1, padding=2),
+            nn.ReLU(),
+        )
+
+
+def load_model(name):
+    models = {
+        "Conv_Net": Conv_Net,
+        "Conv_Net_Dropout": Conv_Net_Dropout,
+        "Conv_Net_FC_Dropout": Conv_Net_FC_Dropout,
+    }
+    return models[name]
