@@ -24,7 +24,7 @@ class MNISTDataset(Dataset):
             root="MNIST",
             train=train,
             download=True,
-            transform=self.transform,
+            transform=self.transform,  # normalize and convert to tensor
         )
 
     def __len__(self):

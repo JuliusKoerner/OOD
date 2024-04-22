@@ -3,6 +3,15 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
+def load_model(name):
+    models = {
+        "Conv_Net": Conv_Net,
+        "Conv_Net_Dropout": Conv_Net_Dropout,
+        "Conv_Net_FC_Dropout": Conv_Net_FC_Dropout,
+    }
+    return models[name]
+
+
 class Conv_Net(nn.Module):
     def __init__(self):
         super(Conv_Net, self).__init__()
@@ -33,6 +42,9 @@ class Conv_Net(nn.Module):
 
 
 class Conv_Net_Dropout(nn.Module):
+    """
+    Convolutional Neural Network with dropout layers before every layer."""
+
     def __init__(self, prob=0.5):
         super(Conv_Net_Dropout, self).__init__()
         # Convolutional layers
@@ -76,6 +88,10 @@ class Conv_Net_Dropout(nn.Module):
 
 
 class Conv_Net_FC_Dropout(Conv_Net_Dropout):
+    """
+    Convolutional Neural Network with dropout layers only before the fully connected layers.
+    """
+
     def __init__(self, prob=0.5):
         super(Conv_Net_FC_Dropout, self).__init__()
         # Convolutional layers
@@ -90,12 +106,3 @@ class Conv_Net_FC_Dropout(Conv_Net_Dropout):
             nn.Conv2d(32, 64, kernel_size=5, stride=1, padding=2),
             nn.ReLU(),
         )
-
-
-def load_model(name):
-    models = {
-        "Conv_Net": Conv_Net,
-        "Conv_Net_Dropout": Conv_Net_Dropout,
-        "Conv_Net_FC_Dropout": Conv_Net_FC_Dropout,
-    }
-    return models[name]
