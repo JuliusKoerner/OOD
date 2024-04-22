@@ -21,7 +21,7 @@ class MNISTDataset(Dataset):
 
         # Download and load the MNIST data
         self.data = datasets.MNIST(
-            root="MNIST",
+            root=".",
             train=train,
             download=True,
             transform=self.transform,  # normalize and convert to tensor

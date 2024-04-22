@@ -3,9 +3,9 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-from Datasets import load
+from src.Datasets import load
 import yaml
-from model import load_model
+from src.model import load_model
 import os
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm

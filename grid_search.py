@@ -1,4 +1,4 @@
-import train_model
+import src.train_model as train_model
 import yaml
 
 batch_sizes = [32, 64, 128]
